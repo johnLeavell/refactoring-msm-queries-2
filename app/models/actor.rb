@@ -11,24 +11,45 @@
 #  updated_at :datetime         not null
 #
 class Actor < ApplicationRecord
-  def characters
-    key = self.id
+  #direct association
+ has_many(:characters)
+  # def characters
+  #   key = self.id
 
-    the_many = Character.where({ :actor_id => key })
+  #   the_many = Character.where({ :actor_id => key })
 
-    return the_many
-  end
+  #   return the_many
+  # end
+# has_many(:filmography, {:class_nmae => "Movie", :foreign_key => "movie_id"}
 
-  def filmography
-    the_many = Array.new
 
-    self.characters.each do |joining_record|
-      destination_record = joining_record.movie
+# indirect association
+#this will not work unless we define the direct associatiuons first
+  # def filmography
+  #   #creteed blank array
+  #   the_many = Array.new
+  #   #used the .characters method and loop through each characcter
+  #   self.characters.each do |joining_record|
+  #     #this will get the cooresponding movie
+  #     destination_record = joining_record.movie
+  #     #push the movie into the blank array
+  #     the_many.push(destination_record)
+  #   end
+  #     #retur the array
+  #   return the_many
+  # end
 
-      the_many.push(destination_record)
-    end
+  # searching and filtering gem ransack
 
-    return the_many
-  end
+  has_many(:filmography, {
+    :through => :characters,
+    :source => :movie
+  })
+
+  #another indirect method
+  # has_many(:directors, {
+  #   :through => :filmography,
+  #   :source => :director
+  # })
 
 end
